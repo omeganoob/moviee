@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MovieController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,27 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/v1')->group(function () {
     Route::post('/login',[AuthController::class, 'login'] );
     Route::post('/register',[AuthController::class, 'register'] );
+    Route::get('/user/{user_id}/favorite', [MovieController::class, 'favorite']);
+    Route::get('/genre/list', [MovieController::class, 'getGenre']);
+    
+    Route::post('/addtofav',[MovieController::class, 'addToFav']);
+    Route::get('/isfav',[MovieController::class, 'isfav']);
+
+    Route::prefix('/movie')->group(function () {
+        Route::get('/all', [MovieController::class, 'index']);
+        Route::get('/genre/{genre_id}', [MovieController::class, 'genre']);
+        Route::get('/age/{age}', [MovieController::class, 'age']);
+        Route::get('/toprated', [MovieController::class, 'toprated']);
+        Route::get('/popular', [MovieController::class, 'popular']);
+        Route::get('/newest', [MovieController::class, 'newest']);
+        Route::get('/onlymovie', [MovieController::class, 'onlymovie']);
+        Route::get('/search', [MovieController::class, 'search']);
+        Route::get('/{movie}/get/comment', [MovieController::class, 'getcomment']);
+
+        Route::post('/{movie}/comment', [MovieController::class, 'comment']);
+    });
+
+    Route::get('/tv/all', [MovieController::class, 'tvshow']);
 });
 
 
