@@ -29,10 +29,11 @@ class MovieController extends Controller
         ]);
     }
 
-    public function genre($genre_id) {
+    public function genre($genre_id)
+    {
         $movies = Movie::join('movie_genres', 'movie_genres.movie_id', 'movies.id')
-                        ->where('movie_genres.genre_id', $genre_id)
-                        ->get(['movies.*']);
+            ->where('movie_genres.genre_id', $genre_id)
+            ->get(['movies.*']);
 
         return response()->json([
             'success' => true,
@@ -40,35 +41,38 @@ class MovieController extends Controller
         ]);
     }
 
-    public function age($age) {
+    public function age($age)
+    {
         $movies = Movie::where('age_restricted', '<=', $age)->get();
         return response()->json([
             'success' => true,
             'movies' => $movies
-        ]);     
+        ]);
     }
 
-    public function favorite($user_id) {
+    public function favorite($user_id)
+    {
         $movies = Movie::leftJoin('user_favorites', 'user_favorites.movie_id', 'movies.id')
-                        ->where('user_favorites.user_id', $user_id)
-                        ->get(['movies.*']);
+            ->where('user_favorites.user_id', $user_id)
+            ->get(['movies.*']);
 
         return response()->json([
             'success' => true,
-            'user_id' => $user_id, 
+            'user_id' => $user_id,
             'movies' => $movies
-        ]); 
+        ]);
     }
 
-    public function addToFav(Request $request) {
+    public function addToFav(Request $request)
+    {
         $movieFavo = User_Favorites::where('user_id', $request->user_id)
-                                    ->where('movie_id', $request->movie_id)->first();
-        
-        if(isset($movieFavo)) {
+            ->where('movie_id', $request->movie_id)->first();
+
+        if (isset($movieFavo)) {
             $movieFavo->delete();
             return response()->json([
                 'success' => true,
-                'message' => "deleted ".$request->movie_id." from ".$request->user_id." favorite list"
+                'message' => "deleted " . $request->movie_id . " from user with id = " . $request->user_id . "'s favorite list"
             ]);
         } else {
             $movie = new User_Favorites();
@@ -77,16 +81,17 @@ class MovieController extends Controller
             $movie->save();
             return response()->json([
                 'success' => true,
-                'message' => "added ".$request->movie_id." to ".$request->user_id." favorite list"
+                'message' => "added " . $request->movie_id . " to user with id =1" . $request->user_id . "'s favorite list"
             ]);
         }
     }
 
-    public function isfav(Request $request) {
+    public function isfav(Request $request)
+    {
         $movieFavo = User_Favorites::where('user_id', $request->user_id)
-                                    ->where('movie_id', $request->movie_id)->first();
-        
-        if(isset($movieFavo)) {
+            ->where('movie_id', $request->movie_id)->first();
+
+        if (isset($movieFavo)) {
             return response()->json([
                 'success' => true,
                 'isfav' => true
@@ -98,7 +103,8 @@ class MovieController extends Controller
         ]);
     }
 
-    public function getGenre() {
+    public function getGenre()
+    {
         $genres = Genre::all();
 
         return response()->json([
@@ -107,7 +113,8 @@ class MovieController extends Controller
         ]);
     }
 
-    public function toprated() {
+    public function toprated()
+    {
         $movies = Movie::orderBy('rated', 'desc')->take(10)->get();
         return response()->json([
             'success' => true,
@@ -115,7 +122,8 @@ class MovieController extends Controller
         ]);
     }
 
-    public function popular() {
+    public function popular()
+    {
         $movies = Movie::orderBy('popular', 'desc')->take(10)->get();
 
         return response()->json([
@@ -124,7 +132,8 @@ class MovieController extends Controller
         ]);
     }
 
-    public function newest() {
+    public function newest()
+    {
         $movies = Movie::orderBy('release_date', 'desc')->take(10)->get();
 
         return response()->json([
@@ -133,13 +142,16 @@ class MovieController extends Controller
         ]);
     }
 
-    public function onlymovie() {
+    public function onlymovie()
+    {
         $idArr1 = Movie::join('movie_genres', 'movie_genres.movie_id', 'movies.id')
-                        ->where('movie_genres.genre_id', 4)
-                        ->select('movies.id')
-                        ->get()
-                        ->toArray();
-        $idArr2 = Movie::where('istvshow', 1)->select('id')->get()->toArray();
+            ->where('movie_genres.genre_id', 4)
+            ->pluck('movies.id')
+            ->toArray();
+
+        $idArr2 = Movie::where('istvshow', 1)
+            ->pluck('id')
+            ->toArray();
 
         $idArr = array_merge($idArr1, $idArr2);
 
@@ -151,7 +163,8 @@ class MovieController extends Controller
         ]);
     }
 
-    public function tvshow() {
+    public function tvshow()
+    {
         $shows = Movie::where('istvshow', 1)->get();
 
         return response()->json([
@@ -160,9 +173,10 @@ class MovieController extends Controller
         ]);
     }
 
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         $search = $request->key;
-        $movies = Movie::where('title', 'like', '%'.$search.'%')->get();
+        $movies = Movie::where('title', 'like', '%' . $search . '%')->get();
 
         return response()->json([
             'success' => true,
@@ -170,17 +184,18 @@ class MovieController extends Controller
         ]);
     }
 
-    public function comment(Request $request, $movie) {
+    public function comment(Request $request, $movie)
+    {
         $comment = new Comment();
         $comment->user_id = $request->user_id;
         $comment->movie_id = $movie;
         $comment->body = $request->body;
-        
+
         $comment->save();
-        
-        $user_name = User::where('id', $request->user_id)->pluck('name');
-        
-        $comment->user_name = $user_name[0];
+
+        $user_name = User::where('id', $request->user_id)->pluck('name')[0];
+
+        $comment->user_name = $user_name;
         $arr = [];
         array_push($arr, $comment);
         return response()->json([
@@ -189,16 +204,16 @@ class MovieController extends Controller
         ]);
     }
 
-    public function getcomment($movie) {
+    public function getcomment($movie)
+    {
         $comments = Comment::join('users', 'users.id', 'comments.user_id')
-                            ->where('movie_id', $movie)
-                            ->select('users.name AS user_name', 'comments.*')
-                            ->get();
+            ->where('movie_id', $movie)
+            ->select('users.name AS user_name', 'comments.*')
+            ->get();
 
         return response()->json([
             'success' => true,
             'comments' => $comments
         ]);
     }
-
 }
