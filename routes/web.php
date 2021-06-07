@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::view('home', 'home')->middleware('auth');
+Route::view('/home', 'home')->middleware('auth')->name('home');
+
+Route::prefix('/movie')->group(function () {
+    Route::get('/all', [MovieController::class, 'index'])->name('movie.all');
+});

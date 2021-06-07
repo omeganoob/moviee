@@ -39,7 +39,6 @@ Route::prefix('/v1')->group(function () {
         Route::get('/onlymovie', [MovieController::class, 'onlymovie']);
         Route::get('/search', [MovieController::class, 'search']);
         Route::get('/{movie}/get/comment', [MovieController::class, 'getcomment']);
-
         Route::post('/{movie}/comment', [MovieController::class, 'comment']);
     });
 

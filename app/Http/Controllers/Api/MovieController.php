@@ -21,7 +21,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $movies = Movie::all()->take(6);
+        $movies = Movie::take(5)->get();
 
         return response()->json([
             'success' => true,
@@ -52,7 +52,7 @@ class MovieController extends Controller
 
     public function favorite($user_id)
     {
-        $movies = Movie::leftJoin('user_favorites', 'user_favorites.movie_id', 'movies.id')
+        $movies = Movie::join('user_favorites', 'user_favorites.movie_id', 'movies.id')
             ->where('user_favorites.user_id', $user_id)
             ->get(['movies.*']);
 
@@ -144,18 +144,13 @@ class MovieController extends Controller
 
     public function onlymovie()
     {
-        $idArr1 = Movie::join('movie_genres', 'movie_genres.movie_id', 'movies.id')
+        $exception = Movie::leftJoin('movie_genres', 'movie_genres.movie_id', 'movies.id')
+            ->groupBy('movies.id')
             ->where('movie_genres.genre_id', 4)
-            ->pluck('movies.id')
-            ->toArray();
+            ->orWhere('istvshow', 1)
+            ->pluck('movies.id')->toArray();
 
-        $idArr2 = Movie::where('istvshow', 1)
-            ->pluck('id')
-            ->toArray();
-
-        $idArr = array_merge($idArr1, $idArr2);
-
-        $movies = Movie::whereNotIn('id', $idArr)->get();
+        $movies = Movie::whereNotIn('id', $exception)->orderBy('rated','desc')->get();
 
         return response()->json([
             'success' => true,

@@ -16,10 +16,7 @@ class MovieController extends Controller
     {
         $movies = Movie::all();
 
-        return response()->json([
-            'success' => true,
-            'movies' => $movies
-        ]);
+        return view("movie.index", compact('movies'));
     }
 
     /**
