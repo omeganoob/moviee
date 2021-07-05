@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Genre;
 use App\Models\Movie;
-use App\Models\movie_genres;
 use App\Models\User;
 use App\Models\User_Favorites;
 
@@ -29,10 +28,14 @@ class MovieController extends Controller
         ]);
     }
 
-    public function genre($genre_id)
+    public function genre(Request $request)
     {
-        $movies = Movie::join('movie_genres', 'movie_genres.movie_id', 'movies.id')
-            ->where('movie_genres.genre_id', $genre_id)
+        $genreIDs = explode(",", $request->genres);
+        $size = sizeof($genreIDs);
+        $movies = Movie::Leftjoin('movie_genres', 'movie_genres.movie_id', 'movies.id')
+            ->whereIn('movie_genres.genre_id', $genreIDs)
+            ->groupBy('movies.id')
+            ->havingRaw("COUNT(distinct movie_genres.genre_id) = {$size}")
             ->get(['movies.*']);
 
         return response()->json([

@@ -31,7 +31,7 @@ Route::prefix('/v1')->group(function () {
 
     Route::prefix('/movie')->group(function () {
         Route::get('/all', [MovieController::class, 'index']);
-        Route::get('/genre/{genre_id}', [MovieController::class, 'genre']);
+        Route::get('/bygenre/', [MovieController::class, 'genre']);
         Route::get('/age/{age}', [MovieController::class, 'age']);
         Route::get('/toprated', [MovieController::class, 'toprated']);
         Route::get('/popular', [MovieController::class, 'popular']);
