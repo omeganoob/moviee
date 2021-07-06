@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,5 @@ Route::view('/home', 'home')->middleware('auth')->name('home');
 Route::prefix('/movie')->group(function () {
     Route::get('/all', [MovieController::class, 'index'])->name('movie.all');
 });
+
+Route::get('/genres', [GenreController::class, 'index'])->name('genre.all');

@@ -12,51 +12,33 @@
                       #
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Title
+                      Name
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                       Popular
+                        Movies
                     </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Rated
-                    </th>
-                    {{-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Control
-                    </th> --}}
-                    {{-- <th scope="col" class="relative px-6 py-3">
-                      <span class="sr-only">Edit</span>
-                    </th> --}}
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  @foreach ($movies as $movie)
+                  @foreach ($genre as $g)
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
                         <div class="ml-4">
                           <div class="text-sm font-medium text-gray-900">
-                            {{$movie->id}}
+                            {{$g->id}}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">{{$movie->title}}</div>
+                      <div class="text-sm text-gray-900">{{$g->name}}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                        {{$movie->rated}}
+                      <span class="px-5 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        {{$g->totalMovie}}
                       </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {{$movie->popular}}
-                    </td>
-                    {{-- <td>
-                      <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                      </label>
-                    </td> --}}
                   </tr>
                   @endforeach
       
