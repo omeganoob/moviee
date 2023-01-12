@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Genre;
 use App\Models\Movie;
+use App\Models\movie_genres;
 use App\Models\User;
 use App\Models\User_Favorites;
 
@@ -28,6 +29,16 @@ class MovieController extends Controller
         ]);
     }
 
+    public function all()
+    {
+        $movies = Movie::all();
+
+        return response()->json([
+            'success' => true,
+            'movies' => $movies
+        ]);
+    }
+
     public function genre(Request $request)
     {
         $genreIDs = explode(",", $request->genres);
@@ -40,6 +51,7 @@ class MovieController extends Controller
 
         return response()->json([
             'success' => true,
+            'genres' => $genreIDs,
             'movies' => $movies
         ]);
     }
@@ -178,7 +190,7 @@ class MovieController extends Controller
 
         return response()->json([
             'success' => true,
-            'movies' => $movies
+            'movies' => $movies,
         ]);
     }
 
@@ -212,6 +224,18 @@ class MovieController extends Controller
         return response()->json([
             'success' => true,
             'comments' => $comments
+        ]);
+    }
+
+    public function detail($id)
+    {
+        $movie = Movie::find($id);
+        $genres = movie_genres::where('movie_id', $id)->pluck('genre_id');
+        $genres = Genre::whereIn('id', $genres)->get('name');
+        $movie->genres = $genres;
+        return response()->json([
+            'success' => true,
+            'movie' => $movie
         ]);
     }
 }

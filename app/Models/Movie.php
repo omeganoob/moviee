@@ -19,4 +19,8 @@ class Movie extends Model
         'release_date',
         'age_restricted'
     ];
+
+    public function genres() {
+        return $this->belongsToMany(Genre::class);
+    }
 }

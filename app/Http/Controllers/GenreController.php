@@ -18,4 +18,16 @@ class GenreController extends Controller
 
         return view('genre.index', compact('genre'));
     }
+
+    public function create() {
+        return view('genre.create');
+    }
+
+    public function store(Request $request) {
+        $g = new Genre();
+        $g->name = $request->name;
+        $g->save();
+
+        return redirect('/genres');
+    }
 }

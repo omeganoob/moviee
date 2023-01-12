@@ -20,8 +20,20 @@ Route::get('/', function () {
 
 Route::view('/home', 'home')->middleware('auth')->name('home');
 
-Route::prefix('/movie')->group(function () {
-    Route::get('/all', [MovieController::class, 'index'])->name('movie.all');
-});
+Route::middleware('auth')->group(function(){
+    
+    Route::prefix('/movie')->group(function () {
+        Route::get('/', [MovieController::class, 'index'])->name('movie.all');
+        Route::get('/create', [MovieController::class, 'create'])->name('movie.create');
 
-Route::get('/genres', [GenreController::class, 'index'])->name('genre.all');
+        Route::post('/', [MovieController::class, 'store'])->name('movie.store');
+    });
+
+    Route::prefix('/genres')->group(function(){
+        Route::get('/', [GenreController::class, 'index'])->name('genre.all');
+        Route::get('/create', [GenreController::class, 'create'])->name('genre.create');
+        
+        Route::post('/', [GenreController::class, 'store'])->name('genre.store');
+    });
+    
+});
